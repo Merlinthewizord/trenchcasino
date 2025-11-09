@@ -118,18 +118,18 @@ export function WelcomeBanner() {
   return (
     <WelcomeWrapper>
       <WelcomeContent>
-        <h1>Welcome to Gamba v2 👋</h1>
-        <p>A fair, simple and decentralized casino on Solana.</p>
+        <h1>Welcome to Trench Casino 👋</h1>
+        <p>A fair, simple and decentralized casino inside of Trench World.</p>
       </WelcomeContent>
       <ButtonGroup>
         <ActionButton onClick={handleCopyInvite}>
           💸 Copy Invite
         </ActionButton>
-        <ActionButton onClick={openLink('https://v2.gamba.so/')}>
-          🚀 Add Liquidity
+        <ActionButton onClick={openLink('https://world.trenchdotworld.com/')}>
+          🚀 Enter Trench World
         </ActionButton>
-        <ActionButton onClick={openLink('https://discord.gg/HSTtFFwR')}>
-          💬 Discord
+        <ActionButton onClick={openLink('https://x.com/trenchdotworld')}>
+          Follow Our Twitter
         </ActionButton>
       </ButtonGroup>
     </WelcomeWrapper>
