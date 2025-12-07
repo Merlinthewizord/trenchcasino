@@ -55,6 +55,23 @@ const Logo = styled(NavLink)`
   }
 `
 
+const Nav = styled.nav`
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  a {
+    color: #fff;
+    opacity: 0.8;
+    text-decoration: none;
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+  a.active {
+    opacity: 1;
+    background: #ffffff11;
+  }
+`
+
 const MarketCapDisplay = styled.div`
   display: flex;
   flex-direction: column;
@@ -185,6 +202,12 @@ export default function Header() {
             </MarketCapDisplay>
           )}
         </div>
+
+        <Nav aria-label="Primary">
+          <NavLink to="/scrolls">Scrolls</NavLink>
+          <NavLink to="/fishnu">Lord Fishnu</NavLink>
+          <NavLink to="/confessional">Confessional</NavLink>
+        </Nav>
 
         <div
           style={{
