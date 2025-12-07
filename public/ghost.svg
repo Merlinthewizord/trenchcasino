@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Ghost body with ethereal glow -->
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Main ghost shape -->
+  <path d="M100,40 C70,40 50,60 50,90 L50,140 L60,135 L70,145 L80,135 L90,145 L100,135 L110,145 L120,135 L130,145 L140,135 L150,140 L150,90 C150,60 130,40 100,40 Z"
+        fill="rgba(171, 159, 242, 0.3)"
+        filter="url(#glow)"/>
+
+  <!-- Eyes -->
+  <ellipse cx="80" cy="85" rx="8" ry="12" fill="rgba(171, 159, 242, 0.8)"/>
+  <ellipse cx="120" cy="85" rx="8" ry="12" fill="rgba(171, 159, 242, 0.8)"/>
+
+  <!-- Mouth -->
+  <path d="M85,105 Q100,115 115,105"
+        stroke="rgba(171, 159, 242, 0.6)"
+        stroke-width="3"
+        stroke-linecap="round"
+        fill="none"/>
+</svg>

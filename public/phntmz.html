@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>...</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Click to start overlay */
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 12, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .start-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .start-text {
+            color: rgba(171, 159, 242, 0.6);
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Fog overlay */
+        .fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at 50% 50%, transparent 0%, #0a0a0c 70%);
+            z-index: 1;
+        }
+
+        /* Floating ghost particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(171, 159, 242, 0.15);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Terminal */
+        .terminal-container {
+            position: relative;
+            z-index: 10;
+            animation: materialize 3s ease-out forwards;
+        }
+
+        @keyframes materialize {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .terminal {
+            background: rgba(18, 15, 28, 0.85);
+            border: 1px solid rgba(171, 159, 242, 0.3);
+            border-radius: 12px;
+            padding: 30px 40px;
+            min-width: 500px;
+            max-width: 90vw;
+            box-shadow:
+                0 0 60px rgba(171, 159, 242, 0.1),
+                0 0 100px rgba(171, 159, 242, 0.05),
+                inset 0 0 60px rgba(171, 159, 242, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(171, 159, 242, 0.5), transparent);
+        }
+
+        /* Scan line effect */
+        .terminal::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(171, 159, 242, 0.01) 2px,
+                rgba(171, 159, 242, 0.01) 4px
+            );
+            pointer-events: none;
+            animation: scanlines 10s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            opacity: 0.5;
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(171, 159, 242, 0.4);
+        }
+
+        .terminal-content {
+            color: #AB9FF2;
+            font-size: 15px;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+        }
+
+        .prompt {
+            color: rgba(171, 159, 242, 0.5);
+            margin-right: 10px;
+        }
+
+        .command {
+            display: block;
+            margin-bottom: 15px;
+            animation: typeIn 2s steps(40) 1s forwards;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 0;
+        }
+
+        @keyframes typeIn {
+            to { width: 100%; }
+        }
+
+        .message {
+            display: block;
+            animation: fadeIn 2s ease 3.5s forwards;
+            opacity: 0;
+        }
+
+        .message-line {
+            display: block;
+            margin: 8px 0;
+        }
+
+        .highlight {
+            color: #c4b8ff;
+            text-shadow: 0 0 20px rgba(171, 159, 242, 0.5);
+            font-weight: 500;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: #AB9FF2;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            opacity: 0;
+            animation: cursorAppear 0.1s 5.5s forwards, blink 1s 5.5s infinite;
+        }
+
+        @keyframes cursorAppear {
+            to { opacity: 1; }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Glitch effect on hover */
+        .terminal:hover .highlight {
+            animation: glitch 0.3s ease;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-2px); text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
+            40% { transform: translateX(2px); text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff; }
+            60% { transform: translateX(-1px); }
+            80% { transform: translateX(1px); }
+        }
+
+        /* Ghost images in background */
+        .ghost {
+            position: fixed;
+            opacity: 0.06;
+            z-index: 0;
+            filter: blur(1px);
+            pointer-events: none;
+        }
+
+        .ghost img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .ghost-1 {
+            width: 180px;
+            height: 180px;
+            top: 8%;
+            left: 8%;
+            animation: ghostFloat1 18s infinite ease-in-out;
+        }
+
+        .ghost-2 {
+            width: 140px;
+            height: 140px;
+            top: 55%;
+            right: 12%;
+            animation: ghostFloat2 22s infinite ease-in-out;
+            animation-delay: -5s;
+        }
+
+        .ghost-3 {
+            width: 100px;
+            height: 100px;
+            bottom: 15%;
+            left: 18%;
+            animation: ghostFloat3 20s infinite ease-in-out;
+            animation-delay: -10s;
+        }
+
+        .ghost-4 {
+            width: 120px;
+            height: 120px;
+            top: 25%;
+            right: 5%;
+            animation: ghostFloat1 25s infinite ease-in-out reverse;
+            animation-delay: -8s;
+        }
+
+        .ghost-5 {
+            width: 90px;
+            height: 90px;
+            bottom: 30%;
+            right: 25%;
+            animation: ghostFloat2 19s infinite ease-in-out;
+            animation-delay: -12s;
+        }
+
+        @keyframes ghostFloat1 {
+            0%, 100% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.04;
+            }
+            25% {
+                transform: translateY(-40px) translateX(20px) rotate(8deg);
+                opacity: 0.08;
+            }
+            50% {
+                transform: translateY(-10px) translateX(-10px) rotate(-3deg);
+                opacity: 0.05;
+            }
+            75% {
+                transform: translateY(30px) translateX(15px) rotate(-6deg);
+                opacity: 0.07;
+            }
+        }
+
+        @keyframes ghostFloat2 {
+            0%, 100% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+                opacity: 0.05;
+            }
+            33% {
+                transform: translateY(-50px) translateX(-30px) rotate(-10deg) scale(1.05);
+                opacity: 0.09;
+            }
+            66% {
+                transform: translateY(20px) translateX(25px) rotate(5deg) scale(0.95);
+                opacity: 0.04;
+            }
+        }
+
+        @keyframes ghostFloat3 {
+            0%, 100% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.03;
+            }
+            50% {
+                transform: translateY(-60px) translateX(40px) rotate(12deg);
+                opacity: 0.08;
+            }
+        }
+
+        /* Vignette */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.9);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .terminal {
+                min-width: auto;
+                padding: 20px 25px;
+                margin: 20px;
+            }
+            .terminal-content {
+                font-size: 13px;
+            }
+            .ghost {
+                opacity: 0.04;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="start-overlay" id="startOverlay">
+        <span class="start-text">click anywhere to enter</span>
+    </div>
+
+    <div class="ghost ghost-1"><img src="ghost.svg" alt=""></div>
+    <div class="ghost ghost-2"><img src="ghost.svg" alt=""></div>
+    <div class="ghost ghost-3"><img src="ghost.svg" alt=""></div>
+    <div class="ghost ghost-4"><img src="ghost.svg" alt=""></div>
+    <div class="ghost ghost-5"><img src="ghost.svg" alt=""></div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="fog"></div>
+    <div class="vignette"></div>
+
+    <div class="terminal-container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot"></div>
+                <div class="terminal-dot"></div>
+                <div class="terminal-dot"></div>
+            </div>
+            <div class="terminal-content">
+                <span class="command"><span class="prompt">></span> initializing...</span>
+                <span class="message">
+                    <span class="message-line">open <span class="highlight">phantom wallet</span></span>
+                    <span class="message-line">and search <span class="highlight">phntmz</span></span>
+                    <span class="message-line" style="margin-top: 20px; opacity: 0.6;">that is where we will be</span>
+                </span>
+                <span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Haunting ambient melody using Web Audio API
+        class HauntingMelody {
+            constructor() {
+                this.audioContext = null;
+                this.isPlaying = false;
+                this.nodes = [];
+            }
+
+            init() {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.masterGain = this.audioContext.createGain();
+                this.masterGain.gain.value = 0.15;
+                this.masterGain.connect(this.audioContext.destination);
+            }
+
+            createDrone(freq, gain = 0.1) {
+                const osc = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                const filter = this.audioContext.createBiquadFilter();
+
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+
+                filter.type = 'lowpass';
+                filter.frequency.value = 800;
+                filter.Q.value = 1;
+
+                gainNode.gain.value = gain;
+
+                osc.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(this.masterGain);
+
+                osc.start();
+                this.nodes.push({ osc, gainNode, filter });
+
+                return { osc, gainNode, filter };
+            }
+
+            createGhostlyPad() {
+                // Deep bass drone
+                this.createDrone(55, 0.08);  // A1
+                this.createDrone(82.5, 0.06); // E2
+
+                // Ethereal mid tones
+                const pad1 = this.createDrone(220, 0.04);  // A3
+                const pad2 = this.createDrone(277.18, 0.03); // C#4
+                const pad3 = this.createDrone(329.63, 0.025); // E4
+
+                // Slow modulation for eeriness
+                this.modulateFrequency(pad1.osc, 220, 2, 0.05);
+                this.modulateFrequency(pad2.osc, 277.18, 3, 0.08);
+                this.modulateFrequency(pad3.osc, 329.63, 4, 0.06);
+            }
+
+            modulateFrequency(osc, baseFreq, rate, depth) {
+                const mod = () => {
+                    const time = this.audioContext.currentTime;
+                    const newFreq = baseFreq + Math.sin(time * rate) * depth * baseFreq;
+                    osc.frequency.setValueAtTime(newFreq, time);
+                    if (this.isPlaying) {
+                        requestAnimationFrame(mod);
+                    }
+                };
+                mod();
+            }
+
+            createWhispers() {
+                const playWhisper = () => {
+                    if (!this.isPlaying) return;
+
+                    const osc = this.audioContext.createOscillator();
+                    const gain = this.audioContext.createGain();
+                    const filter = this.audioContext.createBiquadFilter();
+
+                    // Random ghostly frequency
+                    const frequencies = [440, 493.88, 523.25, 659.25, 783.99];
+                    osc.frequency.value = frequencies[Math.floor(Math.random() * frequencies.length)];
+                    osc.type = 'sine';
+
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 1000 + Math.random() * 500;
+                    filter.Q.value = 10;
+
+                    gain.gain.value = 0;
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.masterGain);
+
+                    const now = this.audioContext.currentTime;
+                    const duration = 3 + Math.random() * 4;
+
+                    // Fade in and out
+                    gain.gain.setValueAtTime(0, now);
+                    gain.gain.linearRampToValueAtTime(0.02 + Math.random() * 0.02, now + duration * 0.3);
+                    gain.gain.linearRampToValueAtTime(0, now + duration);
+
+                    osc.start(now);
+                    osc.stop(now + duration);
+
+                    // Schedule next whisper
+                    setTimeout(playWhisper, (4 + Math.random() * 6) * 1000);
+                };
+
+                // Start whispers after a delay
+                setTimeout(playWhisper, 2000);
+            }
+
+            createReverb() {
+                const convolver = this.audioContext.createConvolver();
+                const length = this.audioContext.sampleRate * 4;
+                const impulse = this.audioContext.createBuffer(2, length, this.audioContext.sampleRate);
+
+                for (let channel = 0; channel < 2; channel++) {
+                    const channelData = impulse.getChannelData(channel);
+                    for (let i = 0; i < length; i++) {
+                        channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2);
+                    }
+                }
+
+                convolver.buffer = impulse;
+                return convolver;
+            }
+
+            start() {
+                if (this.isPlaying) return;
+
+                this.init();
+                this.isPlaying = true;
+
+                // Create reverb and connect
+                const reverb = this.createReverb();
+                const reverbGain = this.audioContext.createGain();
+                reverbGain.gain.value = 0.3;
+                this.masterGain.connect(reverb);
+                reverb.connect(reverbGain);
+                reverbGain.connect(this.audioContext.destination);
+
+                this.createGhostlyPad();
+                this.createWhispers();
+
+                // Fade in
+                this.masterGain.gain.setValueAtTime(0, this.audioContext.currentTime);
+                this.masterGain.gain.linearRampToValueAtTime(0.15, this.audioContext.currentTime + 3);
+            }
+
+            stop() {
+                if (!this.isPlaying) return;
+                this.isPlaying = false;
+
+                this.masterGain.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 2);
+
+                setTimeout(() => {
+                    this.nodes.forEach(({ osc }) => osc.stop());
+                    this.nodes = [];
+                    this.audioContext.close();
+                }, 2000);
+            }
+        }
+
+        // Initialize
+        const melody = new HauntingMelody();
+        const startOverlay = document.getElementById('startOverlay');
+
+        startOverlay.addEventListener('click', () => {
+            startOverlay.classList.add('hidden');
+            melody.start();
+        });
+
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Subtle mouse parallax on terminal
+        const terminal = document.querySelector('.terminal-container');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 10;
+            const y = (e.clientY / window.innerHeight - 0.5) * 10;
+            terminal.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
+</body>
+</html>
