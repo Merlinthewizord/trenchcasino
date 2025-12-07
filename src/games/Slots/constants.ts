@@ -5,7 +5,7 @@ export { default as SOUND_REVEAL } from './assets/reveal.mp3'
 export { default as SOUND_SPIN } from './assets/spin.mp3'
 export { default as SOUND_WIN } from './assets/win.mp3'
 
-import IMAGE_2X from './assets/slot-2x.png'
+const IMAGE_2X = '/lighter.png'
 const IMAGE_3X = '/chickenbroth.png'
 const IMAGE_5X = '/hellyea.png'
 import IMAGE_COOL from './assets/slot-emoji-cool.png'

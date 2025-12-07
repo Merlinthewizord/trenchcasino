@@ -32,7 +32,12 @@ h1, h2 {
 }
 
 body {
-  background: var(--background-color);
+  background-color: var(--background-color);
+  background-image: url('/backg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
   color: var(--text-color);
   cursor: default;
   margin: 0;
