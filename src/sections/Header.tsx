@@ -13,6 +13,7 @@ import { Modal } from '../components/Modal'
 import LeaderboardsModal from '../sections/LeaderBoard/LeaderboardsModal'
 import { PLATFORM_JACKPOT_FEE, PLATFORM_CREATOR_ADDRESS } from '../constants'
 import { useMediaQuery } from '../hooks/useMediaQuery'
+import { useTokenMarketData } from '../hooks/useTokenMarketData'
 import TokenSelect from './TokenSelect'
 import { UserButton } from './UserButton'
 import { ENABLE_LEADERBOARD } from '../constants'
@@ -54,14 +55,62 @@ const Logo = styled(NavLink)`
   }
 `
 
+const MarketCapDisplay = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 5px 12px;
+  background: linear-gradient(135deg, #ff6b3520 0%, #ff853520 100%);
+  border-radius: 10px;
+  border: 1px solid #ff6b3540;
+  gap: 2px;
+
+  @media (max-width: 800px) {
+    display: none;
+  }
+`
+
+const MarketCapLabel = styled.div`
+  font-size: 10px;
+  color: #ff6b35;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`
+
+const MarketCapValue = styled.div`
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`
+
+const PriceChange = styled.span<{ positive: boolean }>`
+  font-size: 11px;
+  color: ${props => props.positive ? '#1de87e' : '#ff4f4f'};
+  font-weight: 600;
+`
+
 export default function Header() {
   const pool = useCurrentPool()
   const context = useGambaPlatformContext()
   const balance = useUserBalance()
-  const isDesktop = useMediaQuery('lg') 
+  const isDesktop = useMediaQuery('lg')
+  const { data: marketData, loading: marketLoading } = useTokenMarketData()
   const [showLeaderboard, setShowLeaderboard] = React.useState(false)
   const [bonusHelp, setBonusHelp] = React.useState(false)
   const [jackpotHelp, setJackpotHelp] = React.useState(false)
+
+  const formatMarketCap = (value: number) => {
+    if (value >= 1_000_000) {
+      return `$${(value / 1_000_000).toFixed(2)}M`
+    } else if (value >= 1_000) {
+      return `$${(value / 1_000).toFixed(2)}K`
+    }
+    return `$${value.toFixed(2)}`
+  }
 
   return (
     <>
@@ -120,6 +169,21 @@ export default function Header() {
           <Logo to="/">
             <img alt="Gamba logo" src="/logo.svg" />
           </Logo>
+
+          {marketData && !marketLoading && (
+            <MarketCapDisplay>
+              <MarketCapLabel>🐟 $SCF Market Cap</MarketCapLabel>
+              <MarketCapValue>
+                {formatMarketCap(marketData.marketCap)}
+                {marketData.priceChange24h !== 0 && (
+                  <PriceChange positive={marketData.priceChange24h > 0}>
+                    {marketData.priceChange24h > 0 ? '↑' : '↓'}
+                    {Math.abs(marketData.priceChange24h).toFixed(2)}%
+                  </PriceChange>
+                )}
+              </MarketCapValue>
+            </MarketCapDisplay>
+          )}
         </div>
 
         <div
