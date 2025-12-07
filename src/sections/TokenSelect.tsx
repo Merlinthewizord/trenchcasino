@@ -86,6 +86,24 @@ export default function TokenSelect() {
     } catch {}
   }, [])
 
+  // If real plays are enabled and there is no saved selection, default to SCF
+  useEffect(() => {
+    const realDisabled = Boolean(import.meta.env.VITE_REAL_PLAYS_DISABLED) && !allowRealPlays
+    if (!realDisabled && !userStore.lastSelectedPool) {
+      const SCF_MINT = new PublicKey('GPqgnQ5xD8oPGT2aN3bZ467EHmDbEt7aRhJuUQGLpump')
+      const scf = POOLS.find(p => p.token.equals(SCF_MINT))
+      if (scf) {
+        context.setPool(scf.token, scf.authority)
+        userStore.set({
+          lastSelectedPool: {
+            token: scf.token.toString(),
+            authority: scf.authority?.toString(),
+          },
+        })
+      }
+    }
+  }, [allowRealPlays])
+
   const selectPool = (pool: PoolToken) => {
     setVisible(false)
     // Check if platform has real plays disabled
