@@ -43,6 +43,8 @@ const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): 
 export const POOLS = [
   // Fake token:
   lp(FAKE_TOKEN_MINT),
+  // Smoking Chicken Fish:
+  lp('GPqgnQ5xD8oPGT2aN3bZ467EHmDbEt7aRhJuUQGLpump'),
   // SOL:
   lp('So11111111111111111111111111111111111111112'),
   // USDC:
@@ -68,6 +70,15 @@ export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = [
     image: '/fakemoney.png',
     baseWager: 1e9,
     decimals: 9,
+    usdPrice: 0,
+  },
+  {
+    mint: new PublicKey('GPqgnQ5xD8oPGT2aN3bZ467EHmDbEt7aRhJuUQGLpump'),
+    name: 'Smoking Chicken Fish',
+    symbol: 'SCF',
+    image: '/logo.svg',
+    baseWager: 1e6,
+    decimals: 6,
     usdPrice: 0,
   },
   {
