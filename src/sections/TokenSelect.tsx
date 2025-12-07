@@ -90,9 +90,13 @@ export default function TokenSelect() {
     setVisible(false)
     // Check if platform has real plays disabled
     const realDisabled = Boolean(import.meta.env.VITE_REAL_PLAYS_DISABLED) && !allowRealPlays
-    if (realDisabled && !pool.token.equals(FAKE_TOKEN_MINT)) {
-      setWarning(true)
-      return
+    if (realDisabled) {
+      const SCF_MINT = new PublicKey('GPqgnQ5xD8oPGT2aN3bZ467EHmDbEt7aRhJuUQGLpump')
+      const allowed = pool.token.equals(FAKE_TOKEN_MINT) || pool.token.equals(SCF_MINT)
+      if (!allowed) {
+        setWarning(true)
+        return
+      }
     }
     // Update selected pool
     context.setPool(pool.token, pool.authority)
