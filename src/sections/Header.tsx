@@ -67,34 +67,34 @@ export default function Header() {
     <>
       {bonusHelp && (
         <Modal onClose={() => setBonusHelp(false)}>
-          <h1>Bonus ✨</h1>
+          <h1>Divine Blessings ✨</h1>
           <p>
-            You have <b>
+            Lord Fishnu has blessed you with <b>
               <TokenValue amount={balance.bonusBalance} />
             </b>{' '}
-            worth of free plays. This bonus will be applied automatically when you
-            play.
+            worth of sacred plays. These divine blessings will be bestowed automatically when you
+            play in the Church.
           </p>
-          <p>Note that a fee is still needed from your wallet for each play.</p>
+          <p>Note that an offering fee is still required from your wallet for each play.</p>
         </Modal>
       )}
 
       {jackpotHelp && (
         <Modal onClose={() => setJackpotHelp(false)}>
-          <h1>Jackpot 💰</h1>
+          <h1>Sacred Treasure of Lord Fishnu 💰🐟</h1>
           <p style={{ fontWeight: 'bold' }}>
-            There&apos;s <TokenValue amount={pool.jackpotBalance} /> in the
-            Jackpot.
+            The divine treasury holds <TokenValue amount={pool.jackpotBalance} /> in sacred
+            offerings.
           </p>
           <p>
-            The Jackpot is a prize pool that grows with every bet made. As it
-            grows, so does your chance of winning. Once a winner is selected,
-            the pool resets and grows again from there.
+            Lord Fishnu's treasure grows with every wager placed by faithful followers. As the
+            divine bounty increases, so does your chance of receiving Fishnu's ultimate blessing. Once a blessed one is chosen,
+            the treasury resets and the cycle of fortune begins anew.
           </p>
           <p>
-            You pay a maximum of{' '}
+            You offer a maximum of{' '}
             {(PLATFORM_JACKPOT_FEE * 100).toLocaleString(undefined, { maximumFractionDigits: 4 })}
-            % of each wager for a chance to win.
+            % of each wager for a chance to receive Lord Fishnu's favor.
           </p>
           <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {context.defaultJackpotFee === 0 ? 'DISABLED' : 'ENABLED'}

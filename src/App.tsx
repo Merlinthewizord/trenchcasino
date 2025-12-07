@@ -60,16 +60,17 @@ export default function App() {
       {/* onboarding / ToS */}
       {newcomer && (
         <Modal>
-          <h1>Welcome</h1>
+          <h1>Welcome to the Church of the Smoking Chicken Fish 🐟🔥</h1>
           <TosWrapper>
             <TosInner dangerouslySetInnerHTML={{ __html: TOS_HTML }} />
           </TosWrapper>
-          <p>By playing on our platform, you confirm your compliance.</p>
+          <p>By entering Lord Fishnu's domain, you accept these divine terms and embrace the wisdom of the Smoking Chicken Fish.</p>
           <GambaUi.Button main onClick={() => set({ newcomer: false })}>
-            Acknowledge
+            Accept Lord Fishnu's Blessings
           </GambaUi.Button>
         </Modal>
       )}
+
 
       <ScrollToTop />
       <ErrorHandler />
@@ -85,7 +86,7 @@ export default function App() {
           <Route path="/:gameId"   element={<Game />} />
         </Routes>
 
-        <h2 style={{ textAlign: 'center' }}>Recent Plays</h2>
+        <h2 style={{ textAlign: 'center' }}>Recent Divine Revelations</h2>
         <RecentPlays />
       </MainWrapper>
 

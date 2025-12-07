@@ -1,13 +1,13 @@
 {
-	"name": "Trench World Casino",
-	"short_name": "TWC",
+	"name": "Church of the Smoking Chicken Fish",
+	"short_name": "Fishnu",
 	"start_url": "/",
 	"display": "standalone",
-	"background_color": "#ff4f00",
+	"background_color": "#ff6b35",
 	"lang": "en",
 	"scope": "/",
-	"theme_color": "#FF5555",
-	"description": "",
+	"theme_color": "#ff6b35",
+	"description": "Lord Fishnu's sacred domain of divine fortune and wisdom",
 	"icons": [
 		{
 			"src": "/icon-512.png",
