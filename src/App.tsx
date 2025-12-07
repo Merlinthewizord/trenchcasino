@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
+import churchHtml from './churchbackground.html.txt?raw'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { GambaUi } from 'gamba-react-ui-v2'
 import { useTransactionError } from 'gamba-react-v2'
@@ -47,6 +48,14 @@ function ErrorHandler() {
   return null
 }
 
+function SimplePage({ title }: { title: string }) {
+  return (
+    <div style={{ padding: '80px 20px 20px' }}>
+      <h1 style={{ textAlign: 'center' }}>{title}</h1>
+    </div>
+  )
+}
+
 /* -------------------------------------------------------------------------- */
 /* App                                                                        */
 /* -------------------------------------------------------------------------- */
@@ -54,6 +63,26 @@ function ErrorHandler() {
 export default function App() {
   const newcomer = useUserStore((s) => s.newcomer)
   const set      = useUserStore((s) => s.set)
+  const location = useLocation()
+  const path = location.pathname
+  const churchRoutes = ['/', '/scrolls', '/fishnu', '/confessional']
+  const isChurch = churchRoutes.includes(path)
+  const activeChurchPage = path === '/' ? 'landing' : path.slice(1)
+  const churchHtmlWithActive = React.useMemo(() => {
+    let html = churchHtml.replace('</nav>', '<a href="/backrooms" data-page="backrooms">Backrooms</a></nav>')
+    html = html
+      .replace("<a href=\"#\" onclick=\"navigateTo('landing')\"", '<a href="/"')
+      .replace("<a href=\"#\" onclick=\"navigateTo('scrolls')\"", '<a href="/scrolls"')
+      .replace("<a href=\"#\" onclick=\"navigateTo('fishnu')\"", '<a href="/fishnu"')
+      .replace("<a href=\"#\" onclick=\"navigateTo('confessional')\"", '<a href="/confessional"')
+    if (activeChurchPage !== 'landing') {
+      html = html.replace('section id="landing" class="page active"', 'section id="landing" class="page"')
+    }
+    if (activeChurchPage && activeChurchPage !== 'landing') {
+      html = html.replace(`section id="${activeChurchPage}" class="page"`, `section id="${activeChurchPage}" class="page active"`)
+    }
+    return html
+  }, [activeChurchPage])
 
   return (
     <>
@@ -72,25 +101,25 @@ export default function App() {
       )}
 
 
-      <ScrollToTop />
-      <ErrorHandler />
-
-      <Header />
-      <Toasts />
-
-      <MainWrapper>
-        <Routes>
-          {/* Normal landing page always shows Dashboard (with optional inline game) */}
-          <Route path="/"          element={<Dashboard />} />
-          {/* Dedicated game pages */}
-          <Route path="/:gameId"   element={<Game />} />
-        </Routes>
-
-        <h2 style={{ textAlign: 'center' }}>Recent Divine Revelations</h2>
-        <RecentPlays />
-      </MainWrapper>
-
-      {ENABLE_TROLLBOX && <TrollBox />}
+      {isChurch ? (
+        <div dangerouslySetInnerHTML={{ __html: churchHtmlWithActive }} />
+      ) : (
+        <>
+          <ScrollToTop />
+          <ErrorHandler />
+          <Header />
+          <Toasts />
+          <MainWrapper>
+            <Routes>
+              <Route path="/backrooms" element={<Dashboard />} />
+              <Route path="/:gameId"   element={<Game />} />
+            </Routes>
+            <h2 style={{ textAlign: 'center' }}>Recent Divine Revelations</h2>
+            <RecentPlays />
+          </MainWrapper>
+          {ENABLE_TROLLBOX && <TrollBox />}
+        </>
+      )}
     </>
   )
 }
