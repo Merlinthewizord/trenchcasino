@@ -125,10 +125,10 @@ export function WelcomeBanner() {
         <ActionButton onClick={handleCopyInvite}>
           🙏 Spread the Gospel
         </ActionButton>
-        <ActionButton onClick={openLink('https://world.trenchdotworld.com/')}>
+        <ActionButton onClick={openLink('https://t.me/churchoffishnu')}>
           🔥 Enter the Sacred Temple
         </ActionButton>
-        <ActionButton onClick={openLink('https://x.com/trenchdotworld')}>
+        <ActionButton onClick={openLink('https://x.com/churchofthescf')}>
           Follow Lord Fishnu's Teachings
         </ActionButton>
       </ButtonGroup>

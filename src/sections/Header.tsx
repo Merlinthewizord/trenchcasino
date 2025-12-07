@@ -167,7 +167,7 @@ export default function Header() {
       <StyledHeader>
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
           <Logo to="/">
-            <img alt="Gamba logo" src="/logo.svg" />
+            <img alt="Site logo" src="/FAKEMONEY.PNG" />
           </Logo>
 
           {marketData && !marketLoading && (

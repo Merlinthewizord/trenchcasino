@@ -10,12 +10,12 @@
 	"description": "Lord Fishnu's sacred domain of divine fortune and wisdom",
 	"icons": [
 		{
-			"src": "/icon-512.png",
+			"src": "/FAKEMONEY.PNG",
 			"sizes": "512x512",
 			"type": "image/png"
 		},
 		{
-			"src": "/icon-192.png",
+			"src": "/FAKEMONEY.PNG",
 			"sizes": "192x192",
 			"type": "image/png"
 		}
