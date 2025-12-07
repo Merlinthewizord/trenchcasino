@@ -43,6 +43,8 @@ const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): 
 export const POOLS = [
   // Fake token:
   lp(FAKE_TOKEN_MINT),
+  // Smoking Chicken Fish:
+  lp('GPqgnQ5xD8oPGT2aN3bZ467EHmDbEt7aRhJuUQGLpump'),
   // SOL:
   lp('So11111111111111111111111111111111111111112'),
   // USDC:
@@ -63,11 +65,20 @@ export const DEFAULT_POOL = POOLS[0]
 export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = [
   {
     mint: FAKE_TOKEN_MINT,
-    name: 'Trench World v2',
-    symbol: 'TRENCH',
+    name: 'Fishnu Blessing',
+    symbol: 'FISHNU',
     image: '/fakemoney.png',
     baseWager: 1e9,
     decimals: 9,
+    usdPrice: 0,
+  },
+  {
+    mint: new PublicKey('GPqgnQ5xD8oPGT2aN3bZ467EHmDbEt7aRhJuUQGLpump'),
+    name: 'Smoking Chicken Fish',
+    symbol: 'SCF',
+    image: '/logo.svg',
+    baseWager: 1e6,
+    decimals: 6,
     usdPrice: 0,
   },
   {
@@ -83,15 +94,15 @@ export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = [
 
 /** HTML to display to user that they need to accept in order to continue */
 export const TOS_HTML = `
-  <p><b>1. Age Requirement:</b> Must be at least 18 years old.</p>
-  <p><b>2. Legal Compliance:</b> Follow local laws responsibly.</p>
-  <p><b>3. Risk Acknowledgement:</b> Games involve risk; no guaranteed winnings.</p>
-  <p><b>4. No Warranty:</b> Games provided "as is"; operate randomly.</p>
-  <p><b>5. Limitation of Liability:</b> We're not liable for damages.</p>
-  <p><b>6. Licensing Disclaimer:</b> Not a licensed casino; for simulation only.</p>
-  <p><b>7. Fair Play:</b> Games are conducted fairly and transparently.</p>
-  <p><b>8. Data Privacy:</b> Your privacy is important to us.</p>
-  <p><b>9. Responsible Gaming:</b> Play responsibly; seek help if needed.</p>
+  <p><b>1. Age of Enlightenment:</b> Must be at least 18 years old to receive Lord Fishnu's blessings.</p>
+  <p><b>2. Sacred Laws:</b> Follow local laws responsibly in Lord Fishnu's realm.</p>
+  <p><b>3. Divine Risk:</b> The path to fortune involves uncertainty; Lord Fishnu guarantees no winnings.</p>
+  <p><b>4. Divine Providence:</b> All games are gifts from Lord Fishnu, provided "as is" with sacred randomness.</p>
+  <p><b>5. Fishnu's Protection:</b> The Church bears no liability for mortal losses.</p>
+  <p><b>6. Sacred Simulation:</b> This is a spiritual temple, not a licensed casino; for enlightenment only.</p>
+  <p><b>7. Fishnu's Fairness:</b> All games are blessed with fairness and transparency.</p>
+  <p><b>8. Sacred Privacy:</b> Your devotion to Lord Fishnu remains private.</p>
+  <p><b>9. Mindful Worship:</b> Play responsibly; seek guidance if the path becomes burdensome.</p>
 `
 
 /**

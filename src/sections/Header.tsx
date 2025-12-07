@@ -13,6 +13,7 @@ import { Modal } from '../components/Modal'
 import LeaderboardsModal from '../sections/LeaderBoard/LeaderboardsModal'
 import { PLATFORM_JACKPOT_FEE, PLATFORM_CREATOR_ADDRESS } from '../constants'
 import { useMediaQuery } from '../hooks/useMediaQuery'
+import { useTokenMarketData } from '../hooks/useTokenMarketData'
 import TokenSelect from './TokenSelect'
 import { UserButton } from './UserButton'
 import { ENABLE_LEADERBOARD } from '../constants'
@@ -54,47 +55,95 @@ const Logo = styled(NavLink)`
   }
 `
 
+const MarketCapDisplay = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 5px 12px;
+  background: linear-gradient(135deg, #ff6b3520 0%, #ff853520 100%);
+  border-radius: 10px;
+  border: 1px solid #ff6b3540;
+  gap: 2px;
+
+  @media (max-width: 800px) {
+    display: none;
+  }
+`
+
+const MarketCapLabel = styled.div`
+  font-size: 10px;
+  color: #ff6b35;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`
+
+const MarketCapValue = styled.div`
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`
+
+const PriceChange = styled.span<{ positive: boolean }>`
+  font-size: 11px;
+  color: ${props => props.positive ? '#1de87e' : '#ff4f4f'};
+  font-weight: 600;
+`
+
 export default function Header() {
   const pool = useCurrentPool()
   const context = useGambaPlatformContext()
   const balance = useUserBalance()
-  const isDesktop = useMediaQuery('lg') 
+  const isDesktop = useMediaQuery('lg')
+  const { data: marketData, loading: marketLoading } = useTokenMarketData()
   const [showLeaderboard, setShowLeaderboard] = React.useState(false)
   const [bonusHelp, setBonusHelp] = React.useState(false)
   const [jackpotHelp, setJackpotHelp] = React.useState(false)
+
+  const formatMarketCap = (value: number) => {
+    if (value >= 1_000_000) {
+      return `$${(value / 1_000_000).toFixed(2)}M`
+    } else if (value >= 1_000) {
+      return `$${(value / 1_000).toFixed(2)}K`
+    }
+    return `$${value.toFixed(2)}`
+  }
 
   return (
     <>
       {bonusHelp && (
         <Modal onClose={() => setBonusHelp(false)}>
-          <h1>Bonus ✨</h1>
+          <h1>Divine Blessings ✨</h1>
           <p>
-            You have <b>
+            Lord Fishnu has blessed you with <b>
               <TokenValue amount={balance.bonusBalance} />
             </b>{' '}
-            worth of free plays. This bonus will be applied automatically when you
-            play.
+            worth of sacred plays. These divine blessings will be bestowed automatically when you
+            play in the Church.
           </p>
-          <p>Note that a fee is still needed from your wallet for each play.</p>
+          <p>Note that an offering fee is still required from your wallet for each play.</p>
         </Modal>
       )}
 
       {jackpotHelp && (
         <Modal onClose={() => setJackpotHelp(false)}>
-          <h1>Jackpot 💰</h1>
+          <h1>Sacred Treasure of Lord Fishnu 💰🐟</h1>
           <p style={{ fontWeight: 'bold' }}>
-            There&apos;s <TokenValue amount={pool.jackpotBalance} /> in the
-            Jackpot.
+            The divine treasury holds <TokenValue amount={pool.jackpotBalance} /> in sacred
+            offerings.
           </p>
           <p>
-            The Jackpot is a prize pool that grows with every bet made. As it
-            grows, so does your chance of winning. Once a winner is selected,
-            the pool resets and grows again from there.
+            Lord Fishnu's treasure grows with every wager placed by faithful followers. As the
+            divine bounty increases, so does your chance of receiving Fishnu's ultimate blessing. Once a blessed one is chosen,
+            the treasury resets and the cycle of fortune begins anew.
           </p>
           <p>
-            You pay a maximum of{' '}
+            You offer a maximum of{' '}
             {(PLATFORM_JACKPOT_FEE * 100).toLocaleString(undefined, { maximumFractionDigits: 4 })}
-            % of each wager for a chance to win.
+            % of each wager for a chance to receive Lord Fishnu's favor.
           </p>
           <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {context.defaultJackpotFee === 0 ? 'DISABLED' : 'ENABLED'}
@@ -120,6 +169,21 @@ export default function Header() {
           <Logo to="/">
             <img alt="Gamba logo" src="/logo.svg" />
           </Logo>
+
+          {marketData && !marketLoading && (
+            <MarketCapDisplay>
+              <MarketCapLabel>🐟 $SCF Market Cap</MarketCapLabel>
+              <MarketCapValue>
+                {formatMarketCap(marketData.marketCap)}
+                {marketData.priceChange24h !== 0 && (
+                  <PriceChange positive={marketData.priceChange24h > 0}>
+                    {marketData.priceChange24h > 0 ? '↑' : '↓'}
+                    {Math.abs(marketData.priceChange24h).toFixed(2)}%
+                  </PriceChange>
+                )}
+              </MarketCapValue>
+            </MarketCapDisplay>
+          )}
         </div>
 
         <div

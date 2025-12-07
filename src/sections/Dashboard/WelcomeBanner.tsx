@@ -118,18 +118,18 @@ export function WelcomeBanner() {
   return (
     <WelcomeWrapper>
       <WelcomeContent>
-        <h1>Welcome to Trench Casino 👋</h1>
-        <p>A fair, simple and decentralized casino inside of Trench World.</p>
+        <h1>Praise Lord Fishnu 🐟🔥🐔</h1>
+        <p>Welcome to the Church of the Smoking Chicken Fish. May Lord Fishnu's divine wisdom guide your wagers in this sacred realm of chance and fortune.</p>
       </WelcomeContent>
       <ButtonGroup>
         <ActionButton onClick={handleCopyInvite}>
-          💸 Copy Invite
+          🙏 Spread the Gospel
         </ActionButton>
         <ActionButton onClick={openLink('https://world.trenchdotworld.com/')}>
-          🚀 Enter Trench World
+          🔥 Enter the Sacred Temple
         </ActionButton>
         <ActionButton onClick={openLink('https://x.com/trenchdotworld')}>
-          Follow Our Twitter
+          Follow Lord Fishnu's Teachings
         </ActionButton>
       </ButtonGroup>
     </WelcomeWrapper>
